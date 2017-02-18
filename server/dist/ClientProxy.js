@@ -1,0 +1,10 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+class ClientProxy {
+  constructor(io) {}
+}
+exports.ClientProxy = ClientProxy;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkNsaWVudFByb3h5LmpzIl0sIm5hbWVzIjpbIkNsaWVudFByb3h5IiwiY29uc3RydWN0b3IiLCJpbyJdLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBTyxNQUFNQSxXQUFOLENBQWtCO0FBQ3ZCQyxjQUFZQyxFQUFaLEVBQWdCLENBRWY7QUFIc0I7UUFBWkYsVyxHQUFBQSxXIiwiZmlsZSI6IkNsaWVudFByb3h5LmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNsYXNzIENsaWVudFByb3h5IHtcbiAgY29uc3RydWN0b3IoaW8pIHtcblxuICB9XG59Il19
