@@ -26,13 +26,13 @@ console.log('listening on port ' + port)
 
 let idCount = 0
 
-let playerSockets = []
+var playerSockets = []
 
 io.on('connection', (socket) => {
-  socket.emit('send game state', gameState)
-  socket.on('create player', (data) => {
+  socket.emit('send-game-state', gameState)
+  socket.on('create-player', (data) => {
     let id = idCount++
-    playerSockets[id] = socket
+    playerSockets.push(socket)
     let color = ''
     let orientation = 0
     let posX = 50
@@ -40,9 +40,9 @@ io.on('connection', (socket) => {
     let velX = 0
     let velY = 0
     let newPlayer = new Player(id, color, orientation, posX, posY, velX, velY)
-    socket.emit('player created', newPlayer)
+    socket.emit('player-created', newPlayer)
   })
-  socket.on('send player state', (data) => {
+  socket.on('send-player-state', (data) => {
     playerSocket = playerSockets[data.id]
     if (playerSocket !== socket)
       playerSocket.emit('error', { message: 'invalid player'})
@@ -55,7 +55,9 @@ io.on('connection', (socket) => {
 })
 
 setInterval(() => {
-  playerSockets.forEach((playerSockets) => {
-    playerSockets.emit('send game state', gameState)
+  console.log(playerSockets)
+  playerSockets.forEach((playerSocket) => {
+    console.log('ps')
+    playerSocket.emit('send-game-state', gameState)
   })
-}, 10)
+}, 1)
