@@ -1,0 +1,10 @@
+#newDocButton {
+    padding: 25px;
+    display: inline;
+}
+
+#main-page-inner-container {
+    margin: 100px auto;
+    text-align: center;
+    width: 400px;
+}
