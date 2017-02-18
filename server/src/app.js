@@ -20,7 +20,7 @@ let io = new SocketIO(server)
 app.use(morgan('combined'))
 app.use(cors());
 
-let port = 3001
+let port = 3002
 server.listen(port)
 console.log('listening on port ' + port)
 
