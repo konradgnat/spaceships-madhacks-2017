@@ -1,4 +1,4 @@
-import RainbowText from 'objects/RainbowText';
+import RainbowText from '../objects/RainbowText';
 let io = require('socket.io-client');
 
 class GameState extends Phaser.State {
@@ -14,7 +14,7 @@ class GameState extends Phaser.State {
 
 		this._speed = 150;
 
-		this.connection = io('localhost:3001');
+		this.connection = io('localhost:3002');
 
 		connection.emit('player-created');
 

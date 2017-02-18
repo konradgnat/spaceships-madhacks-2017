@@ -1,0 +1,19 @@
+version: '3'
+services:
+  core:
+    build:
+      context: server
+      dockerfile: Dockerfile.dev
+    ports:
+     - "3002:3002"
+    environment:
+     - NODE_ENV=development
+  webapp:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    ports:
+     - "8080:8080"
+     - "8081:8081"
+    volumes:
+    - "./frontend:/usr/src/app"

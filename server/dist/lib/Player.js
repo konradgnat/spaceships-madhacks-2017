@@ -1,0 +1,18 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+class Player {
+  constructor(id, color, orientation, posX, posY, velX, velY) {
+    this.id = id;
+    this.color = color;
+    this.orientation = orientation;
+    this.posX = posX;
+    this.posY = posY;
+    this.velX = velX;
+    this.velY = velY;
+  }
+}
+exports.Player = Player;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxpYi9QbGF5ZXIuanMiXSwibmFtZXMiOlsiUGxheWVyIiwiY29uc3RydWN0b3IiLCJpZCIsImNvbG9yIiwib3JpZW50YXRpb24iLCJwb3NYIiwicG9zWSIsInZlbFgiLCJ2ZWxZIl0sIm1hcHBpbmdzIjoiOzs7OztBQUFPLE1BQU1BLE1BQU4sQ0FBYTtBQUNsQkMsY0FBWUMsRUFBWixFQUFnQkMsS0FBaEIsRUFBdUJDLFdBQXZCLEVBQW9DQyxJQUFwQyxFQUEwQ0MsSUFBMUMsRUFBZ0RDLElBQWhELEVBQXNEQyxJQUF0RCxFQUE0RDtBQUMxRCxTQUFLTixFQUFMLEdBQVVBLEVBQVY7QUFDQSxTQUFLQyxLQUFMLEdBQWFBLEtBQWI7QUFDQSxTQUFLQyxXQUFMLEdBQW1CQSxXQUFuQjtBQUNBLFNBQUtDLElBQUwsR0FBWUEsSUFBWjtBQUNBLFNBQUtDLElBQUwsR0FBWUEsSUFBWjtBQUNBLFNBQUtDLElBQUwsR0FBWUEsSUFBWjtBQUNBLFNBQUtDLElBQUwsR0FBWUEsSUFBWjtBQUNEO0FBVGlCO1FBQVBSLE0sR0FBQUEsTSIsImZpbGUiOiJsaWIvUGxheWVyLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNsYXNzIFBsYXllciB7XG4gIGNvbnN0cnVjdG9yKGlkLCBjb2xvciwgb3JpZW50YXRpb24sIHBvc1gsIHBvc1ksIHZlbFgsIHZlbFkpIHtcbiAgICB0aGlzLmlkID0gaWRcbiAgICB0aGlzLmNvbG9yID0gY29sb3JcbiAgICB0aGlzLm9yaWVudGF0aW9uID0gb3JpZW50YXRpb25cbiAgICB0aGlzLnBvc1ggPSBwb3NYXG4gICAgdGhpcy5wb3NZID0gcG9zWVxuICAgIHRoaXMudmVsWCA9IHZlbFhcbiAgICB0aGlzLnZlbFkgPSB2ZWxZXG4gIH1cbn1cbiJdfQ==
