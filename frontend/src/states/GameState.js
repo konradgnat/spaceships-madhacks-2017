@@ -4,7 +4,7 @@ let io = require('socket.io-client');
 class GameState extends Phaser.State {
 
 	update() {
-		console.log('foo');
+
 	}
 
 	create() {
@@ -21,7 +21,7 @@ class GameState extends Phaser.State {
 		});
 
 		this.connection.on('player-created', (player) => {
-			console.log(state);
+			console.log(player);
 		});
 
     this.game.time.events.loop(this._speed, this.update, this).timer.start();

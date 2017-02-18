@@ -138,6 +138,7 @@ function serve() {
         server: {
             baseDir: BUILD_PATH
         },
+
         open: false // Change it to true if you wish to allow Browsersync to open a browser window.
     };
     
