@@ -1,0 +1,28 @@
+{
+  "name": "astroid-server",
+  "version": "1.0.0",
+  "description": "Back-end server for astroid",
+  "main": "dist/app.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-watch": "^4.3.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeroicAutodidact/spaceships-madhacks-2017.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HeroicAutodidact/spaceships-madhacks-2017/issues"
+  },
+  "homepage": "https://github.com/HeroicAutodidact/spaceships-madhacks-2017#readme"
+}
