@@ -1,4 +1,4 @@
-import RainbowText from 'objects/RainbowText';
+import RainbowText from '../objects/RainbowText';
 let io = require('socket.io-client');
 
 class GameState extends Phaser.State {

@@ -4,11 +4,14 @@ var path = require("path");
 //comment
 module.exports = {
   entry: {
-    app: ['./src/index.js', './src/style/index.css', './src/index.html']
+    app: ['./src/index.js', './static/index.html', './static/styles/main.css']
   },
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/build',
     filename: "index.bundle.js",
+  },
+  devServer: {
+    contentBase: path.resolve( __dirname , 'build'),
   },
   module: {
     loaders: [
@@ -21,7 +24,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/index.html'),
+      template: path.resolve(__dirname, 'static/index.html'),
       filename: 'index.html',
       inject: 'body'
     }),

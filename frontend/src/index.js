@@ -1,4 +1,6 @@
-import GameState from 'states/GameState';
+import * as html from '../static/index.html'
+import * as css from '../static/styles/main.css'
+import GameState from './states/GameState';
 
 class Game extends Phaser.Game {
 
