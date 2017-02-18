@@ -1,4 +1,3 @@
-import Router from './js/routing'
 import $ from 'jquery'
 
 
