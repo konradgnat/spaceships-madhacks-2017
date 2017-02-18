@@ -16,6 +16,8 @@ class GameState extends Phaser.State {
 
 		this.connection = io('localhost:3001');
 
+		connection.emit('player-created');
+
 		this.connection.on('send-game-state', (state) => {
 			console.log(state);
 		});
