@@ -1,7 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
 var path = require("path");
-
+//comment
 module.exports = {
   entry: {
     app: ['./src/index.js', './src/style/index.css', './src/index.html']
