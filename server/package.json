@@ -4,12 +4,20 @@
   "description": "Back-end server for astroid",
   "main": "dist/app.js",
   "dependencies": {
+    "cors": "^2.8.1",
+    "express": "^4.14.1",
+    "expresss": "0.0.0",
+    "morgan": "^1.8.1",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "babel-preset-node6": "^11.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-watch": "^4.3.11"
   },
-  "devDependencies": {},
   "scripts": {
+    "start": "export NODE_ENV=development && node dist/app.js",
     "test": "test"
   },
   "repository": {
