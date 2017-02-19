@@ -3,9 +3,11 @@ let io = require('socket.io-client');
 
 
 let shipProperties =  {
-	maxVelocities: 90,
-  drag: 30,
-	acceleration: 100
+	maxVelocities: 400,
+  drag: 80,
+	acceleration: 10,
+	angularAcceleration: 60,
+  rotation: 60
 };
 
 class MainGame extends Phaser.State {
@@ -15,14 +17,18 @@ class MainGame extends Phaser.State {
 	}
 
 	checkPlayerInput() {
-		if (this.key_left.isDown) {
-			this.myShip.body.velocity.x -= shipProperties.acceleration;
-		} if (this.key_right.isDown) {
-      this.myShip.body.velocity.x += shipProperties.acceleration;
-		} if (this.key_up.isDown) {
-      this.myShip.body.velocity.y -= shipProperties.acceleration;
-		} if (this.key_down.isDown) {
-      this.myShip.body.velocity.y += shipProperties.acceleration;
+    if (this.key_left.isDown) {
+      this.myShip.body.angularVelocity += -shipProperties.angularAcceleration;
+    } else if (this.key_right.isDown) {
+      this.myShip.body.angularVelocity += shipProperties.angularAcceleration;
+    } else {
+      this.myShip.body.angularVelocity = 0;
+    }
+
+    if (this.key_thrust.isDown) {
+      this.myShip.body.facing.y += shipProperties.acceleration; //.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
+    } else {
+      this.myShip.body.acceleration.set(0);
     }
 	}
 
@@ -47,8 +53,8 @@ class MainGame extends Phaser.State {
 	initKeyboard() {
 		this.key_left = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
     this.key_right = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    this.key_up = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-    this.key_down = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+    //this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	}
 
 	create() {
