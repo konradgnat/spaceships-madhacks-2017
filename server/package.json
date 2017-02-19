@@ -15,10 +15,13 @@
     "babel-preset-node6": "^11.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
-    "gulp-watch": "^4.3.11"
+    "gulp-watch": "^4.3.11",
+    "nodemon": "^1.11.0"
   },
   "scripts": {
     "start": "export NODE_ENV=development && node dist/app.js",
+    "start-hot": "export NODE_ENV=development && nodemon dist/app.js",
+    "start-hot-debug": "export NODE_ENV=development && nodemon --debug dist/app.js",
     "test": "test"
   },
   "repository": {

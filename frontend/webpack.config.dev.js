@@ -7,17 +7,18 @@ module.exports = {
     app: ['./src/index.js', './static/index.html', './static/styles/main.css']
   },
   output: {
-    path: __dirname + '/build',
+    path: __dirname + '/dist',
     filename: "index.bundle.js",
   },
   devServer: {
-    contentBase: path.resolve( __dirname , 'build'),
+    contentBase: path.resolve( __dirname , 'dist'),
   },
   module: {
     loaders: [
       {test: /\.html$/, loader: "raw-loader"},
       {test: /\.js$/, exclude: [/node_modules/], loader: 'babel-loader', query: {
-        presets: ['es2015']
+        presets: ['es2015'],
+        plugins: ['transform-object-rest-spread']
       }},
       {test: /\.css$/, loader: "style-loader!css-loader"},
       {test: /\.png$/, loader: "url-loader?limit=100000"},
