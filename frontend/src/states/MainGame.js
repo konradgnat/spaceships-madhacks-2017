@@ -155,7 +155,7 @@ class MainGame extends Phaser.State {
 		this.initKeyboard();
 		this.initPhysics();
 
-		this._speed = 10;
+		this._speed = 100;
 
 		let host = process.env.SERVER_HOSTNAME
     let port = process.env.SERVER_PORT
