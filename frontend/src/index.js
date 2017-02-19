@@ -6,8 +6,8 @@ import $ from 'jquery';
 class Game extends Phaser.Game {
 
 	constructor() {
-	  let width = $(window).width();
-    let height = $(window).height();
+	  let width = 800
+    let height = 800
 		super(width, height, Phaser.AUTO, 'content', null);
 		this.state.add('MainGame', MainGame, false);
 		this.state.start('MainGame');

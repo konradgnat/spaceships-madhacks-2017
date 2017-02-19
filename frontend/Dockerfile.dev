@@ -10,7 +10,9 @@ RUN	npm install
 
 # Bundle app source
 COPY . /usr/src/app
-RUN ls
+ARG SERVER_HOSTNAME=localhost
+ARG SERVER_PORT=3002
+ARG NODE_ENV=development
 
 # Configure network
 # EXPOSE 8080

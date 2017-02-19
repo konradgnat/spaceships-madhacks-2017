@@ -7,7 +7,7 @@ module.exports = {
     app: ['./src/index.js']
   },
   output: {
-    path: __dirname + '/build',
+    path: __dirname + '/dist',
     filename: "index.bundle.js",
   },
   module: {
@@ -27,6 +27,6 @@ module.exports = {
       filename: 'index.html',
       inject: 'body'
     }),
-    new webpack.EnvironmentPlugin({NODE_ENV: 'development'})
+    new webpack.EnvironmentPlugin(['NODE_ENV', 'SERVER_HOSTNAME', 'SERVER_PORT'])
   ],
 };
