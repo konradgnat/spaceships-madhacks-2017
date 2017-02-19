@@ -12,8 +12,6 @@ class MainGame extends Phaser.State {
 
 	preload() {
     this.game.load.image('triangle', 'images/triangle.png');
-
-    // this.game.load.start();
 	}
 
 	checkPlayerInput() {
@@ -30,6 +28,13 @@ class MainGame extends Phaser.State {
 
 	update() {
 		this.checkPlayerInput();
+	}
+
+	sendUpdatesToServer() {
+		this.socket.emit('send-player-state', {
+			id: this.clientId,
+      ...this.myShip.body
+		})
 	}
 
 	initPhysics() {
@@ -51,34 +56,36 @@ class MainGame extends Phaser.State {
 		// let text = new RainbowText(this.game, center.x, center.y, "- phaser -\nwith a sprinkle of\nES6 dust!");
 		// text.anchor.set(0.5);
 
-    this.myShip = this.game.add.sprite(0,0,'triangle');
-    this.myShip.scale.x = .1;
-    this.myShip.scale.y = .1;
-
-		this.initKeyboard();
-		this.initPhysics();
 
 		this._speed = 150;
+		this._updateSpeed = 500;
 
 		this.socket = io('localhost:3002');
 
 		this.socket.on('connect', () => {
-			console.log('connected');
       this.socket.emit('create-player')
 		});
 
     this.socket.on('send-game-state', (state) => {
     	this.state = state;
-      // console.log(state);
     });
 
-    this.socket.on('player-created', (player) => {
-      // console.log(player);
+    this.socket.on('player-created', ({newClientId}) => {
+    	this.clientId = newClientId;
+      this.myShip = this.game.add.sprite(0,0,'triangle');
+      this.myShip.scale.x = .1;
+      this.myShip.scale.y = .1;
+
+      this.initKeyboard();
+      this.initPhysics();
+
+      // Star the main loops
+      this.game.time.events.loop(this._speed, this.update, this).timer.start();
+      this.game.time.events.loop(this._updateSpeed, this.sendUpdatesToServer, this).timer.start();
     });
 
 
 
-    this.game.time.events.loop(this._speed, this.update, this).timer.start();
 	}
 
 }
