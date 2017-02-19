@@ -190,12 +190,14 @@ class MainGame extends Phaser.State {
           }
 
           for (let i = 0; i < this.state.players.length; i++) {
-            let newShip = this.game.add.sprite(0,0,'triangle');
-            newShip.scale.x = .1;
-            newShip.scale.y = .1;
-            newShip.anchor.set(0.5)
-            this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
-            playerSprites.push({id: state.players[i].id, sprite: newShip})
+            if (playerSprites[i].id != id) {
+              let newShip = this.game.add.sprite(0, 0, 'triangle');
+              newShip.scale.x = .1;
+              newShip.scale.y = .1;
+              newShip.anchor.set(0.5)
+              this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
+              playerSprites.push({id: state.players[i].id, sprite: newShip})
+            }
           }
         }
 
