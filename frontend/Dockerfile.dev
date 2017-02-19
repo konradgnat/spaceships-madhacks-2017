@@ -10,6 +10,7 @@ RUN	npm install
 
 # Bundle app source
 COPY . /usr/src/app
+RUN ls
 
 # Configure network
 # EXPOSE 8080

@@ -14,13 +14,17 @@ class GameState extends Phaser.State {
 
 		this._speed = 150;
 
-		this.connection = io('localhost:3002');
+		this.socket = io('localhost:3002');
+		
+		this.socket.on('connect', () => {
+		  console.log('foo');
+		});
 
-		this.connection.on('send-game-state', (state) => {
+		this.socket.on('send-game-state', (state) => {
 			console.log(state);
 		});
 
-		this.connection.on('player-created', (player) => {
+		this.socket.on('player-created', (player) => {
 			console.log(state);
 		});
 

@@ -4,7 +4,7 @@
   "description": "Tiny flexible template for writing Phaser games in ES6/ES2015 with Babel.",
   "main": "src/index.js",
   "scripts": {
-    "start": "export NODE_ENV=\"development\" && webpack-dev-server --host 0.0.0.0 --content-base src --config=./webpack.config.dev.js --hot",
+    "start": "export NODE_ENV=\"development\" && node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0 --content-base src --config=./webpack.config.dev.js --hot",
     "build-dev": "export NODE_ENV=\"development\" && webpack --config ./webpack.config.dev.js",
     "build-prod": "export NODE_ENV=\"production\" && webpack -p --config ./webpack.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit s1"
