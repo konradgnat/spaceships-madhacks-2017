@@ -21,7 +21,6 @@ var bulletProperties = {
 
 let playerSprites = []
 let id = null
-let k = 0;
 
 class MainGame extends Phaser.State {
 
@@ -179,15 +178,7 @@ class MainGame extends Phaser.State {
         }
       })
       this.socket.on('send-game-state', (state) => {
-        k++
-        if (k === 1000) {
-          for (let i = 0; i < playerSprites.length; i++) {
-            if (playerSprites[i].id != id) {
-              playerSprites[i].sprite.kill()
-              playerSprites[i].sprite.destroy()
-              playerSprites.splice(i, 1)
-            }
-          }
+
 
           for (let i = 0; i < this.state.players.length; i++) {
             if (playerSprites[i].id != id) {
