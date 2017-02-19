@@ -4,11 +4,20 @@ let io = require('socket.io-client');
 
 let shipProperties =  {
 	maxVelocities: 400,
+  maxAngular: 100,
   drag: 80,
 	acceleration: 80,
 	angularAcceleration: 10,
   rotation: 60
 };
+
+var bulletProperties = {
+  speed: 400,
+  interval: 250,
+  lifeSpan: 2000,
+  maxCount: 30,
+}
+
 
 let playerSprites = []
 let id = null
@@ -16,7 +25,9 @@ let id = null
 class MainGame extends Phaser.State {
 
 	preload() {
+    this.bulletInterval = 0;
     this.game.load.image('triangle', 'images/triangle.png');
+    this.game.load.image('bullet', 'images/bullet.png');
 
     // this.game.load.start();
 	}
@@ -35,11 +46,29 @@ class MainGame extends Phaser.State {
     } else {
       this.myShip.body.acceleration.set(0);
     }
+
+    if (this.key_fire.isDown) {
+      this.fire();
+    }
 	}
+
+  checkBoundaries(sprite) {
+    if (sprite.x < 0) {
+      sprite.x = this.game.width;
+    } else if (sprite.x > this.game.width) {
+      sprite.x = 0;
+    }
+
+    if (sprite.y < 0) {
+      sprite.y = this.game.height;
+    } else if (sprite.y > this.game.height) {
+      sprite.y = 0;
+    }
+  }
 
 	update() {
 		this.checkPlayerInput();
-		console.log(this.myShip.body.rotation)
+		//console.log(this.myShip.body.rotation)
 		this.socket.emit('send-player-state', {
 		  id: id,
       posX: this.myShip.body.position.x,
@@ -48,24 +77,55 @@ class MainGame extends Phaser.State {
       velY: this.myShip.body.velocity.y,
       orientation: this.myShip.body.rotation
     })
-	}
+    for (let i = 0; i < playerSprites.length; i++) {
+      this.checkBoundaries(playerSprites[i].sprite);
+    }
+  }
+
+  fire() {
+    if (this.game.time.now > this.bulletInterval) {
+      var bullet = this.bulletGroup.getFirstExists(false);
+      bullet.scale.x = 0.01
+      bullet.scale.y = 0.01
+      if (bullet) {
+        var length = this.myShip.width * 0.5;
+        var x = this.myShip.x + (Math.cos(this.myShip.rotation) * length);
+        var y = this.myShip.y + (Math.sin(this.myShip.rotation) * length);
+
+        bullet.reset(x, y);
+        bullet.lifespan = bulletProperties.lifeSpan;
+        bullet.rotation = this.myShip.rotation;
+
+        this.game.physics.arcade.velocityFromRotation(this.myShip.rotation, bulletProperties.speed, bullet.body.velocity);
+        this.bulletInterval = this.game.time.now + bulletProperties.interval;
+      }
+    }
+  }
 
 	initPhysics() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.enable(this.myShip, Phaser.Physics.ARCADE);
     this.myShip.body.drag.set(shipProperties.drag);
     this.myShip.body.maxVelocity.set(shipProperties.maxVelocities);
+    this.myShip.body.maxAngular = shipProperties.maxAngular
+    this.bulletGroup = this.game.add.group();
+    this.bulletGroup.enableBody = true;
+    this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
+    this.bulletGroup.createMultiple(bulletProperties.maxCount, 'bullet');
+    this.bulletGroup.setAll('anchor.x', 0.5);
+    this.bulletGroup.setAll('anchor.y', 0.5);
+    this.bulletGroup.setAll('lifespan', bulletProperties.lifeSpan);
   }
 
 	initKeyboard() {
 		this.key_left = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
     this.key_right = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
     this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-    //this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.key_fire = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	}
 
 	create() {
-		let center = { x: this.game.world.centerX, y: this.game.world.centerY }
+    let center = { x: this.game.world.centerX, y: this.game.world.centerY }
 		// let text = new RainbowText(this.game, center.x, center.y, "- phaser -\nwith a sprinkle of\nES6 dust!");
 
     this.myShip = this.game.add.sprite(0,0,'triangle');
@@ -108,8 +168,9 @@ class MainGame extends Phaser.State {
             console.log('new player connected')
           } else {
             let serverStateOfPlayer = state.players[i];
-            console.log('updating...')
-            console.log(serverStateOfPlayer)
+            //
+            // console.log('updating...')
+            //console.log(serverStateOfPlayer)
             // set player state
             foundPlayer.sprite.position.x = serverStateOfPlayer.posX
             foundPlayer.sprite.position.y = serverStateOfPlayer.posY
