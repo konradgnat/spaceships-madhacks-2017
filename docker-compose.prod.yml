@@ -1,0 +1,17 @@
+version: '3'
+services:
+  core:
+    build:
+      context: server
+      dockerfile: Dockerfile.prod
+    ports:
+     - "3002:3002"
+    environment:
+     - NODE_ENV=production
+  webapp:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+    ports:
+     - "80:80"
+     - "443:443"

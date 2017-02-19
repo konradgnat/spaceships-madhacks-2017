@@ -4,14 +4,11 @@ var path = require("path");
 //comment
 module.exports = {
   entry: {
-    app: ['./src/index.js', './static/index.html', './static/styles/main.css']
+    app: ['./src/index.js']
   },
   output: {
     path: __dirname + '/build',
     filename: "index.bundle.js",
-  },
-  devServer: {
-    contentBase: path.resolve( __dirname , 'build'),
   },
   module: {
     loaders: [
@@ -32,5 +29,4 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({NODE_ENV: 'development'})
   ],
-  devtool: 'source-map'
 };
