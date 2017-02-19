@@ -6,8 +6,8 @@ let shipProperties =  {
 	maxVelocities: 400,
   maxAngular: 100,
   drag: 80,
-	acceleration: 80,
-	angularAcceleration: 10,
+	acceleration: 150,
+	angularAcceleration: 15,
   rotation: 60
 };
 
