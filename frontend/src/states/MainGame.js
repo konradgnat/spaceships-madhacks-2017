@@ -25,7 +25,7 @@ class MainGame extends Phaser.State {
       this.myShip.body.angularVelocity = 0;
     }
 
-    if (this.key_thrust.isDown) {
+    if (this.key_up.isDown) {
       this.myShip.body.facing.y += shipProperties.acceleration; //.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
     } else {
       this.myShip.body.acceleration.set(0);
@@ -39,7 +39,7 @@ class MainGame extends Phaser.State {
 	sendUpdatesToServer() {
 		this.socket.emit('send-player-state', {
 			id: this.clientId,
-      ...this.myShip.body
+      ...(this.myShip.body)
 		})
 	}
 
@@ -53,7 +53,7 @@ class MainGame extends Phaser.State {
 	initKeyboard() {
 		this.key_left = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
     this.key_right = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+    this.key_up = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
     //this.key_thrust = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	}
 
