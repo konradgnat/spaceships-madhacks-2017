@@ -55,9 +55,8 @@ io.on('connection', (socket) => {
 })
 
 setInterval(() => {
-  console.log(playerSockets)
   playerSockets.forEach((playerSocket) => {
-    console.log('ps')
+    console.log(gameState)
     playerSocket.emit('send-game-state', gameState)
   })
 }, 1)

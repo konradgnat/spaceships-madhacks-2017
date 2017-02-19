@@ -1,10 +1,10 @@
 import RainbowText from '../objects/RainbowText';
 let io = require('socket.io-client');
 
-class GameState extends Phaser.State {
+class MainGame extends Phaser.State {
 
 	update() {
-
+		console.log(this.state)
 	}
 
 	create() {
@@ -15,21 +15,23 @@ class GameState extends Phaser.State {
 		this._speed = 150;
 
 		this.socket = io('localhost:3002');
-		
+
 		this.socket.on('connect', () => {
-		  console.log('foo');
+			console.log('connected');
+      this.socket.emit('create-player')
 		});
 
+    this.socket.on('send-game-state', (state) => {
+    	this.state = state;
+      // console.log(state);
+    });
 
-		this.socket.on('send-game-state', (state) => {
-			console.log(state);
-		});
+    this.socket.on('player-created', (player) => {
+      // console.log(player);
+    });
 
-		this.socket.on('player-created', (player) => {
-			console.log(state);
-		});
 
-        this.game.time.events.loop(this._speed, this.update, this).timer.start();
+    this.game.time.events.loop(this._speed, this.update, this).timer.start();
 	}
 
 }
