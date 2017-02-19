@@ -17,7 +17,7 @@ COPY package.json .
 RUN npm install
 
 # Set build env vars
-ARG SERVER_HOSTNAME=spaceship-shootout.com
+ARG SERVER_HOSTNAME=52.33.184.245
 ARG SERVER_PORT=3002
 ARG NODE_ENV=production
 
