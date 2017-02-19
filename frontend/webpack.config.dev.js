@@ -7,11 +7,11 @@ module.exports = {
     app: ['./src/index.js', './static/index.html', './static/styles/main.css']
   },
   output: {
-    path: __dirname + '/build',
+    path: __dirname + '/dist',
     filename: "index.bundle.js",
   },
   devServer: {
-    contentBase: path.resolve( __dirname , 'build'),
+    contentBase: path.resolve( __dirname , 'dist'),
   },
   module: {
     loaders: [
