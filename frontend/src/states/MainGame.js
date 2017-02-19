@@ -4,7 +4,6 @@ let io = require('socket.io-client');
 class MainGame extends Phaser.State {
 
 	update() {
-		console.log(this.state)
 	}
 
 	create() {
@@ -30,10 +29,13 @@ class MainGame extends Phaser.State {
       // console.log(player);
     });
 
+    this.game.load.image('triangle', 'images/triangle.jpg');
+    this.game.add.sprite(0,0,'triangle');
+    this.state = {}
 
     this.game.time.events.loop(this._speed, this.update, this).timer.start();
 	}
 
 }
 
-export default GameState;
+export default MainGame;
