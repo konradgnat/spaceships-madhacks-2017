@@ -17,7 +17,8 @@ module.exports = {
     loaders: [
       {test: /\.html$/, loader: "raw-loader"},
       {test: /\.js$/, exclude: [/node_modules/], loader: 'babel-loader', query: {
-        presets: ['es2015']
+        presets: ['es2015'],
+        plugins: ['transform-object-rest-spread']
       }},
       {test: /\.css$/, loader: "style-loader!css-loader"},
       {test: /\.png$/, loader: "url-loader?limit=100000"},
