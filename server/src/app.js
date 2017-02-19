@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
   socket.on('send-player-state', (data) => {
     let player = gameState.getPlayer(data.id)
     if (player === undefined)
-      return
+      gameState.addPlayer(data.id, '', data.orientation, data.posX, data.posY, data.velX, data.velY)
     player.posX = data.posX
     player.posY = data.posY
     player.velX = data.velX
@@ -74,3 +74,7 @@ io.on('connection', (socket) => {
 setInterval(() => {
   io.emit('send-game-state', gameState)
 }, 30)
+
+setInterval(() => {
+  gameState.players = []
+}, 100)
