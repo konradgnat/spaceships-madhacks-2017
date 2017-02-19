@@ -31,12 +31,12 @@ io.on('connection', (socket) => {
     console.log('player disconnected')
 
     let player = playerSockets.find((player) => {
-      return player.socket === socket
+      return player.socket == socket
     })
     if (player === undefined)
       return new Error()
     gameState.players.filter((p) => {
-      return p.id !== player.id
+      return p.id != player.id
     })
   })
   socket.emit('send-game-state', gameState)
@@ -64,10 +64,12 @@ io.on('connection', (socket) => {
     player.velY = data.velY
     player.orientation = data.orientation
   })
+  socket.on('my-bullet-fired', (data) => {
+    console.log('bullet fired')
+    io.emit('bullet-fired', data)
+  })
 })
 
 setInterval(() => {
-  playerSockets.forEach((playerSocket) => {
-    playerSocket.socket.emit('send-game-state', gameState)
-  })
+  io.emit('send-game-state', gameState)
 }, 30)
