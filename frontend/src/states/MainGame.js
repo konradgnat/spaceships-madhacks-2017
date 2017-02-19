@@ -35,7 +35,7 @@ class MainGame extends Phaser.State {
     } else {
       this.myShip.body.acceleration.set(0);
     }
-	}
+	} 
 
 	update() {
 		this.checkPlayerInput();
