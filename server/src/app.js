@@ -9,8 +9,6 @@ import { Obstacle } from './lib/Obstacle'
 
 let app = express();
 
-let p1 = new Player(1, 2, 3, 4, 5, 6, 7)
-let o1 = new Obstacle(1, 2)
 let gameState = new GameState()
 
 let server = http.createServer(app)
@@ -31,8 +29,9 @@ var playerSockets = []
 io.on('connection', (socket) => {
   socket.emit('send-game-state', gameState)
   socket.on('create-player', (data) => {
+    console.log('player connected')
     let id = idCount++
-    playerSockets.push(socket)
+    playerSockets.push({id: id, socket: socket})
     let color = ''
     let orientation = 0
     let posX = 50
@@ -40,13 +39,21 @@ io.on('connection', (socket) => {
     let velX = 0
     let velY = 0
     let newPlayer = new Player(id, color, orientation, posX, posY, velX, velY)
+    gameState.players.push(newPlayer)
     socket.emit('player-created', newPlayer)
   })
   socket.on('send-player-state', (data) => {
-    playerSocket = playerSockets[data.id]
-    if (playerSocket !== socket)
-      playerSocket.emit('error', { message: 'invalid player'})
+    /*let playerSocket = playerSockets.find((player) => {
+      return player.id === data.id
+    })
+    if (playerSocket === null) {
+      throw new Error()
+    }*/
+    //if (playerSocket !== socket)
+      //playerSocket.emit('error', { message: 'invalid player'})
     let player = gameState.getPlayer(data.id)
+    if (player === undefined)
+      return
     player.posX = data.posX
     player.posY = data.posY
     player.velX = data.velX
@@ -56,6 +63,6 @@ io.on('connection', (socket) => {
 
 setInterval(() => {
   playerSockets.forEach((playerSocket) => {
-    playerSocket.emit('send-game-state', gameState)
+    playerSocket.socket.emit('send-game-state', gameState)
   })
-}, 1)
+}, 100)

@@ -10,6 +10,9 @@ let shipProperties =  {
   rotation: 60
 };
 
+let playerSprites = []
+let id = null
+
 class MainGame extends Phaser.State {
 
 	preload() {
@@ -28,7 +31,7 @@ class MainGame extends Phaser.State {
     }
 
     if (this.key_thrust.isDown) {
-      this.myShip.body.facing.y += shipProperties.acceleration; //.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
+      this.myShip.body.velocity.y += shipProperties.acceleration; //.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
     } else {
       this.myShip.body.acceleration.set(0);
     }
@@ -36,6 +39,13 @@ class MainGame extends Phaser.State {
 
 	update() {
 		this.checkPlayerInput();
+		this.socket.emit('send-player-state', {
+		  id: id,
+      posX: this.myShip.body.position.x,
+      posY: this.myShip.body.position.y,
+      velX: this.myShip.body.velocity.x,
+      velY: this.myShip.body.velocity.y
+    })
 	}
 
 	initPhysics() {
@@ -74,12 +84,35 @@ class MainGame extends Phaser.State {
 		});
 
     this.socket.on('send-game-state', (state) => {
+      //console.log(state)
     	this.state = state;
-      // console.log(state);
+      for(let i = 0; i < state.players.length; i++) {
+        let foundPlayer = playerSprites.find((player) => {
+          return player.id === state.players[i].id
+        })
+        console.log(foundPlayer)
+        if (foundPlayer === undefined) {
+          let newShip = this.game.add.sprite(0,0,'triangle');
+          newShip.scale.x = .1;
+          newShip.scale.y = .1;
+          this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
+          playerSprites.push({id: state.players[i].id, sprite: newShip})
+          console.log('new player connected')
+        } else {
+          let serverStateOfPlayer = state.players[i];
+          console.log('updating...')
+          console.log(serverStateOfPlayer)
+          // set player state
+          foundPlayer.sprite.body.position.x = serverStateOfPlayer.posX
+          foundPlayer.sprite.body.position.y = serverStateOfPlayer.posY
+          foundPlayer.sprite.body.velocity.x = serverStateOfPlayer.velX
+          foundPlayer.sprite.body.velocity.y = serverStateOfPlayer.velY
+        }
+      }
     });
 
     this.socket.on('player-created', (player) => {
-      // console.log(player);
+      id = player.id
     });
 
 

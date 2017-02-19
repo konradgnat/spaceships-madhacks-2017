@@ -18,8 +18,7 @@ export class GameState {
 
   getPlayer(id) {
     return this.players.find((person) => {
-      if (person.id === id)
-        return person.id
+      return person.id === id
     })
   }
 }
