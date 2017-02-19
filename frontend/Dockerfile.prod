@@ -19,7 +19,7 @@ RUN npm install
 # Set build env vars
 ARG SERVER_HOSTNAME=localhost
 ARG SERVER_PORT=3002
-ARG NODE_ENV=production
+ARG NODE_ENV=spaceship-shootout.com
 
 # Build app
 COPY . .
