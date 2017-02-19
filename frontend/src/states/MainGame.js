@@ -216,7 +216,9 @@ class MainGame extends Phaser.State {
           if (p == undefined) {
             playerSprites[i].sprite.kill()
             playerSprites[i].sprite.destroy()
-            playerSprites.splice(i, 1)
+            playerSprites = playerSprites.filter((p2) => {
+              return p2 !== p
+            })
           }
         }
 
