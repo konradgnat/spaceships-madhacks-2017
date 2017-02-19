@@ -38,11 +38,12 @@ io.on('connection', (socket) => {
     gameState.players.filter((p) => {
       return p.id != player.id
     })
+    io.emit('player-disconnected', {id: socket.id })
   })
   socket.emit('send-game-state', gameState)
   socket.on('create-player', (data) => {
     console.log('player connected')
-    let id = idCount++
+    let id = socket.id
     playerSockets.push({id: id, socket: socket})
     let color = ''
     let orientation = 0

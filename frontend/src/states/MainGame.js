@@ -207,16 +207,16 @@ class MainGame extends Phaser.State {
           }
         }
 
-        for (let i = 0; i < playerSprites.length; i++) {
-          let player = this.state.players.find((p) => {
-            return p.id === playerSprites[i].id
-          })
-          if (player === undefined)
-            playerSprites[i].sprite.destroy()
-          playerSprites.filter((ps) => {
-            return ps.id != player.id
-          })
-        }
+        this.socket.on('player-disconnected', (data) => {
+          for (let i = 0; i < playerSprites.length; i++) {
+            if (playerSprites[i].id == data.id) {
+              playerSprites[i].sprite.kill()
+              playerSprites[i].sprite.destroy()
+              playerSprites.splice(i, 1)
+              break
+            }
+          }
+        })
       });
     });
 
