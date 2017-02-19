@@ -5,8 +5,8 @@ let io = require('socket.io-client');
 let shipProperties =  {
 	maxVelocities: 400,
   drag: 80,
-	acceleration: 10,
-	angularAcceleration: 60,
+	acceleration: 80,
+	angularAcceleration: 10,
   rotation: 60
 };
 
@@ -31,7 +31,7 @@ class MainGame extends Phaser.State {
     }
 
     if (this.key_thrust.isDown) {
-      this.myShip.body.velocity.y += shipProperties.acceleration; //.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
+      this.game.physics.arcade.accelerationFromRotation(this.myShip.rotation, shipProperties.acceleration, this.myShip.body.acceleration);
     } else {
       this.myShip.body.acceleration.set(0);
     }
@@ -39,12 +39,14 @@ class MainGame extends Phaser.State {
 
 	update() {
 		this.checkPlayerInput();
+		console.log(this.myShip.body.rotation)
 		this.socket.emit('send-player-state', {
 		  id: id,
       posX: this.myShip.body.position.x,
       posY: this.myShip.body.position.y,
       velX: this.myShip.body.velocity.x,
-      velY: this.myShip.body.velocity.y
+      velY: this.myShip.body.velocity.y,
+      orientation: this.myShip.body.rotation
     })
 	}
 
@@ -65,9 +67,9 @@ class MainGame extends Phaser.State {
 	create() {
 		let center = { x: this.game.world.centerX, y: this.game.world.centerY }
 		// let text = new RainbowText(this.game, center.x, center.y, "- phaser -\nwith a sprinkle of\nES6 dust!");
-		// text.anchor.set(0.5);
 
     this.myShip = this.game.add.sprite(0,0,'triangle');
+    this.myShip.anchor.set(0.5);
     this.myShip.scale.x = .1;
     this.myShip.scale.y = .1;
 
@@ -83,36 +85,48 @@ class MainGame extends Phaser.State {
       this.socket.emit('create-player')
 		});
 
-    this.socket.on('send-game-state', (state) => {
-      //console.log(state)
-    	this.state = state;
-      for(let i = 0; i < state.players.length; i++) {
-        let foundPlayer = playerSprites.find((player) => {
-          return player.id === state.players[i].id
-        })
-        console.log(foundPlayer)
-        if (foundPlayer === undefined) {
-          let newShip = this.game.add.sprite(0,0,'triangle');
-          newShip.scale.x = .1;
-          newShip.scale.y = .1;
-          this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
-          playerSprites.push({id: state.players[i].id, sprite: newShip})
-          console.log('new player connected')
-        } else {
-          let serverStateOfPlayer = state.players[i];
-          console.log('updating...')
-          console.log(serverStateOfPlayer)
-          // set player state
-          foundPlayer.sprite.body.position.x = serverStateOfPlayer.posX
-          foundPlayer.sprite.body.position.y = serverStateOfPlayer.posY
-          foundPlayer.sprite.body.velocity.x = serverStateOfPlayer.velX
-          foundPlayer.sprite.body.velocity.y = serverStateOfPlayer.velY
-        }
-      }
-    });
-
     this.socket.on('player-created', (player) => {
       id = player.id
+      playerSprites.push({id: id, sprite: this.myShip})
+      this.socket.on('send-game-state', (state) => {
+        //console.log(state)
+        this.state = state;
+        for(let i = 0; i < state.players.length; i++) {
+          if (state.players[i].id == id)
+            continue;
+          let foundPlayer = playerSprites.find((player) => {
+            return player.id === state.players[i].id
+          })
+          //console.log(foundPlayer)
+          if (foundPlayer === undefined) {
+            let newShip = this.game.add.sprite(0,0,'triangle');
+            newShip.scale.x = .1;
+            newShip.scale.y = .1;
+            newShip.anchor.set(0.5)
+            this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
+            playerSprites.push({id: state.players[i].id, sprite: newShip})
+            console.log('new player connected')
+          } else {
+            let serverStateOfPlayer = state.players[i];
+            console.log('updating...')
+            console.log(serverStateOfPlayer)
+            // set player state
+            foundPlayer.sprite.position.x = serverStateOfPlayer.posX
+            foundPlayer.sprite.position.y = serverStateOfPlayer.posY
+            foundPlayer.sprite.body.velocity.x = serverStateOfPlayer.velX
+            foundPlayer.sprite.body.velocity.y = serverStateOfPlayer.velY
+            foundPlayer.sprite.angle = serverStateOfPlayer.orientation
+          }
+        }
+
+        for (let i = 0; i < playerSprites.length; i++) {
+          let player = this.state.players.find((p) => {
+            return p.id === playerSprites[i].id
+          })
+          if (player === undefined)
+            playerSprites[i].sprite.destroy()
+        }
+      });
     });
 
 

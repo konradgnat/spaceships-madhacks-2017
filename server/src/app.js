@@ -27,6 +27,18 @@ let idCount = 0
 var playerSockets = []
 
 io.on('connection', (socket) => {
+  socket.on('disconnect', () => {
+    console.log('player disconnected')
+
+    let player = playerSockets.find((player) => {
+      return player.socket === socket
+    })
+    if (player === undefined)
+      return new Error()
+    gameState.players.filter((p) => {
+      return p.id !== player.id
+    })
+  })
   socket.emit('send-game-state', gameState)
   socket.on('create-player', (data) => {
     console.log('player connected')
@@ -43,14 +55,6 @@ io.on('connection', (socket) => {
     socket.emit('player-created', newPlayer)
   })
   socket.on('send-player-state', (data) => {
-    /*let playerSocket = playerSockets.find((player) => {
-      return player.id === data.id
-    })
-    if (playerSocket === null) {
-      throw new Error()
-    }*/
-    //if (playerSocket !== socket)
-      //playerSocket.emit('error', { message: 'invalid player'})
     let player = gameState.getPlayer(data.id)
     if (player === undefined)
       return
@@ -58,6 +62,7 @@ io.on('connection', (socket) => {
     player.posY = data.posY
     player.velX = data.velX
     player.velY = data.velY
+    player.orientation = data.orientation
   })
 })
 
@@ -65,4 +70,4 @@ setInterval(() => {
   playerSockets.forEach((playerSocket) => {
     playerSocket.socket.emit('send-game-state', gameState)
   })
-}, 100)
+}, 30)
