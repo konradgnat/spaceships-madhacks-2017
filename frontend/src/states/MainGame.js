@@ -48,7 +48,8 @@ class MainGame extends Phaser.State {
     }
 
     if (this.key_fire.isDown) {
-      this.fire();
+      this.fire(this.myShip, this.myBulletGroup);
+      this.socket.emit('my-bullet-fired', {id: id})
     }
 	}
 
@@ -67,6 +68,8 @@ class MainGame extends Phaser.State {
   }
 
 	update() {
+	  //console.log(playerSprites)
+    //console.log(this.state)
 		this.checkPlayerInput();
 		//console.log(this.myShip.body.rotation)
 		this.socket.emit('send-player-state', {
@@ -80,23 +83,30 @@ class MainGame extends Phaser.State {
     for (let i = 0; i < playerSprites.length; i++) {
       this.checkBoundaries(playerSprites[i].sprite);
     }
+    this.game.physics.arcade.overlap(this.myShip, this.bulletGroup, () => {
+      this.myShip.position.x = 0
+      this.myShip.position.y = 0
+      this.myShip.body.velocity.x = 0
+      this.myShip.body.velocity.y = 0
+      this.myShip.angle = 0
+    })
   }
 
-  fire() {
+  fire(sprite, bulletGroup) {
     if (this.game.time.now > this.bulletInterval) {
-      var bullet = this.bulletGroup.getFirstExists(false);
+      var bullet = bulletGroup.getFirstExists(false);
       bullet.scale.x = 0.01
       bullet.scale.y = 0.01
       if (bullet) {
-        var length = this.myShip.width * 0.5;
-        var x = this.myShip.x + (Math.cos(this.myShip.rotation) * length);
-        var y = this.myShip.y + (Math.sin(this.myShip.rotation) * length);
+        var length = sprite.width * 0.5;
+        var x = sprite.x + (Math.cos(sprite.rotation) * length);
+        var y = sprite.y + (Math.sin(sprite.rotation) * length);
 
         bullet.reset(x, y);
         bullet.lifespan = bulletProperties.lifeSpan;
-        bullet.rotation = this.myShip.rotation;
+        bullet.rotation = sprite.rotation;
 
-        this.game.physics.arcade.velocityFromRotation(this.myShip.rotation, bulletProperties.speed, bullet.body.velocity);
+        this.game.physics.arcade.velocityFromRotation(sprite.rotation, bulletProperties.speed, bullet.body.velocity);
         this.bulletInterval = this.game.time.now + bulletProperties.interval;
       }
     }
@@ -108,6 +118,15 @@ class MainGame extends Phaser.State {
     this.myShip.body.drag.set(shipProperties.drag);
     this.myShip.body.maxVelocity.set(shipProperties.maxVelocities);
     this.myShip.body.maxAngular = shipProperties.maxAngular
+
+    this.myBulletGroup = this.game.add.group();
+    this.myBulletGroup.enableBody = true;
+    this.myBulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
+    this.myBulletGroup.createMultiple(bulletProperties.maxCount, 'bullet');
+    this.myBulletGroup.setAll('anchor.x', 0.5);
+    this.myBulletGroup.setAll('anchor.y', 0.5);
+    this.myBulletGroup.setAll('lifespan', bulletProperties.lifeSpan);
+
     this.bulletGroup = this.game.add.group();
     this.bulletGroup.enableBody = true;
     this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
@@ -136,7 +155,7 @@ class MainGame extends Phaser.State {
 		this.initKeyboard();
 		this.initPhysics();
 
-		this._speed = 150;
+		this._speed = 10;
 
 		this.socket = io('localhost:3002');
 
@@ -148,6 +167,14 @@ class MainGame extends Phaser.State {
     this.socket.on('player-created', (player) => {
       id = player.id
       playerSprites.push({id: id, sprite: this.myShip})
+      this.socket.on('bullet-fired', (data) => {
+        console.log('recv b f')
+        for (let i = 0; i < playerSprites.length; i++) {
+          if (playerSprites[i].id === data.id && data.id !== id) {
+            this.fire(playerSprites[i].sprite, this.bulletGroup)
+          }
+        }
+      })
       this.socket.on('send-game-state', (state) => {
         //console.log(state)
         this.state = state;
@@ -186,6 +213,9 @@ class MainGame extends Phaser.State {
           })
           if (player === undefined)
             playerSprites[i].sprite.destroy()
+          playerSprites.filter((ps) => {
+            return ps.id != player.id
+          })
         }
       });
     });
