@@ -211,9 +211,9 @@ class MainGame extends Phaser.State {
 
         for (let i = 0; i < playerSprites.length; i++) {
           let p = this.state.players.find((player) => {
-            return player.id === playerSprites[i].id
+            return player.id == playerSprites[i].id
           })
-          if (p === undefined) {
+          if (p == undefined) {
             playerSprites[i].sprite.kill()
             playerSprites[i].sprite.destroy()
             playerSprites.splice(i, 1)
