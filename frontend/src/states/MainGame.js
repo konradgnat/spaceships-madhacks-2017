@@ -157,7 +157,9 @@ class MainGame extends Phaser.State {
 
 		this._speed = 10;
 
-		this.socket = io('localhost:3002');
+		let host = process.env.SERVER_HOSTNAME
+    let port = process.env.SERVER_PORT
+    this.socket = io('localhost:3002');
 
 		this.socket.on('connect', () => {
 			console.log('connected');
