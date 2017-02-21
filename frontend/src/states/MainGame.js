@@ -21,7 +21,6 @@ var bulletProperties = {
 
 let playerSprites = []
 let id = null
-let k = 0;
 
 class MainGame extends Phaser.State {
 
@@ -179,28 +178,6 @@ class MainGame extends Phaser.State {
         }
       })
       this.socket.on('send-game-state', (state) => {
-        k++
-        if (k === 1000) {
-          for (let i = 0; i < playerSprites.length; i++) {
-            if (playerSprites[i].id != id) {
-              playerSprites[i].sprite.kill()
-              playerSprites[i].sprite.destroy()
-              playerSprites.splice(i, 1)
-            }
-          }
-
-          for (let i = 0; i < this.state.players.length; i++) {
-            if (playerSprites[i].id != id) {
-              let newShip = this.game.add.sprite(0, 0, 'triangle');
-              newShip.scale.x = .1;
-              newShip.scale.y = .1;
-              newShip.anchor.set(0.5)
-              this.game.physics.enable(newShip, Phaser.Physics.ARCADE);
-              playerSprites.push({id: state.players[i].id, sprite: newShip})
-            }
-          }
-        }
-
         //console.log(state)
         this.state = state;
         for(let i = 0; i < state.players.length; i++) {
@@ -239,7 +216,9 @@ class MainGame extends Phaser.State {
           if (p == undefined) {
             playerSprites[i].sprite.kill()
             playerSprites[i].sprite.destroy()
-            playerSprites.splice(i, 1)
+            playerSprites = playerSprites.filter((p2) => {
+              return p2 !== p
+            })
           }
         }
 

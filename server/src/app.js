@@ -58,7 +58,8 @@ io.on('connection', (socket) => {
   socket.on('send-player-state', (data) => {
     let player = gameState.getPlayer(data.id)
     if (player === undefined) {
-      gameState.addPlayer(data.id, '', data.orientation, data.posX, data.posY, data.velX, data.velY)
+      let np = new Player(data.id, '', data.orientation, data.posX, data.posY, data.velX, data.velY)
+      gameState.addPlayer(np)
     } else {
       player.posX = data.posX
       player.posY = data.posY
